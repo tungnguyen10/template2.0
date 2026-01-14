@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - Lab IUH</title>
+  <script type="module" src="../main.js"></script>
+</head>
+<body class="flex flex-col min-h-screen bg-gray-50">
+  
+  <!-- Header Component -->
+  <div data-include="../components/header/header.html" data-js="../components/header/header.js"></div>
+  
+  <!-- Main Content -->
+  <main class="flex-1">
+    <section class="container mx-auto px-4 py-16">
+      <div class="text-center mb-12">
+        <h1 class="text-5xl font-bold text-gray-900 mb-4">Welcome to Lab IUH</h1>
+        <p class="text-xl text-gray-600">Static website với Vite + Vanilla JS + TailwindCSS</p>
+      </div>
+      
+      <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <div class="text-blue-600 text-4xl mb-4">⚡</div>
+          <h3 class="text-xl font-semibold mb-2">Lightning Fast</h3>
+          <p class="text-gray-600">Powered by Vite - instant HMR and optimized builds</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <div class="text-blue-600 text-4xl mb-4">🎨</div>
+          <h3 class="text-xl font-semibold mb-2">Beautiful UI</h3>
+          <p class="text-gray-600">TailwindCSS for rapid and consistent styling</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <div class="text-blue-600 text-4xl mb-4">📦</div>
+          <h3 class="text-xl font-semibold mb-2">Simple & Clean</h3>
+          <p class="text-gray-600">Vanilla JS - no complex frameworks needed</p>
+        </div>
+      </div>
+      
+      <div class="text-center mt-12">
+        <button id="demo-btn" class="btn btn-primary">Click Me for Demo!</button>
+        <p id="demo-output" class="mt-4 text-lg font-medium text-blue-600"></p>
+      </div>
+    </section>
+  </main>
+  
+  <!-- Footer Component -->
+  <div data-include="../components/footer/footer.html"></div>
+  
+  <!-- Page-specific JS -->
+  <script type="module" src="../js/home.js"></script>
+</body>
+</html>
