@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import { resolve } from 'path'
+import { resolve, extname, basename } from 'path'
 import { glob } from 'glob'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
@@ -56,6 +56,20 @@ const mapUrlToFsPath = (url) => {
   return null
 }
 
+const getCssOutputName = (name) => {
+  if (!name) return 'style'
+  const normalized = name.replace(/\\/g, '/')
+  const marker = 'styles/'
+  const idx = normalized.lastIndexOf(marker)
+  if (idx >= 0) {
+    return normalized
+      .slice(idx + marker.length)
+      .replace(/\.css$/i, '')
+      .replace(/\//g, '-')
+  }
+  return basename(normalized, '.css')
+}
+
 export default defineConfig({
   root: 'src/pages',
   plugins: [mapSrcRequests()],
@@ -73,9 +87,34 @@ export default defineConfig({
     rollupOptions: {
       input,
       output: {
-        entryFileNames: 'assets/[name]-[hash].js',
-        chunkFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash][extname]',
+        entryFileNames: ({ name }) => {
+          const mappedName = name === 'main' ? 'app' : name
+          return `assets/js/${mappedName}-[hash].js`
+        },
+        chunkFileNames: ({ name }) => {
+          const isVendor = name === 'vendor'
+          const chunkName = isVendor ? 'vendor' : name
+          return `assets/js/${chunkName}-[hash].js`
+        },
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return 'vendor'
+          }
+        },
+        assetFileNames: assetInfo => {
+          const ext = extname(assetInfo.name || '').slice(1)
+          if (ext === 'css') {
+            const cssName = getCssOutputName(assetInfo.name || '') || 'style'
+            return `assets/css/${cssName}-[hash][extname]`
+          }
+          if (ext === 'svg') {
+            return 'assets/svg/[name]-[hash][extname]'
+          }
+          if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif'].includes(ext)) {
+            return 'assets/image/[name]-[hash][extname]'
+          }
+          return 'assets/[name]-[hash][extname]'
+        },
       },
     },
   },

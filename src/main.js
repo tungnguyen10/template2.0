@@ -4,6 +4,8 @@
  */
 
 import './styles/main.css'
+import './components/header/header.css'
+import './components/footer/footer.css'
 import { loadComponents } from './js/main.js'
 
 // Load components khi DOM ready
