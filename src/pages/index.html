@@ -14,9 +14,19 @@
   <!-- Main Content -->
   <main class="flex-1">
     <section class="container mx-auto px-4 py-16">
-      <div class="text-center mb-12">
-        <h1 class="text-5xl font-bold text-gray-900 mb-4">Welcome to Lab IUH</h1>
-        <p class="text-xl text-gray-600">Static website với Vite + Vanilla JS + TailwindCSS</p>
+      <div class="hero-section px-8 py-16 text-center text-white mb-12">
+        <h1 class="text-5xl font-bold mb-4">Welcome to Lab IUH</h1>
+        <p class="text-xl text-white/80">Static website với Vite + Vanilla JS + TailwindCSS</p>
+        
+        <div class="hero-branding" aria-hidden="true">
+          <span class="logo-badge"></span>
+          <span class="vite-icon"></span>
+        </div>
+
+        <div class="mt-10">
+          <button id="demo-btn" class="btn btn-primary">Click Me for Demo!</button>
+          <p id="demo-output" class="mt-4 text-lg font-medium"></p>
+        </div>
       </div>
       
       <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -37,11 +47,6 @@
           <h3 class="text-xl font-semibold mb-2">Simple & Clean</h3>
           <p class="text-gray-600">Vanilla JS - no complex frameworks needed</p>
         </div>
-      </div>
-      
-      <div class="text-center mt-12">
-        <button id="demo-btn" class="btn btn-primary">Click Me for Demo!</button>
-        <p id="demo-output" class="mt-4 text-lg font-medium text-blue-600"></p>
       </div>
     </section>
   </main>
