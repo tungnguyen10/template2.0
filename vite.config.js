@@ -3,6 +3,7 @@ import { resolve, extname, basename, dirname, isAbsolute } from 'path'
 import { glob } from 'glob'
 import { fileURLToPath } from 'url'
 import { copyFileSync, mkdirSync, existsSync } from 'fs'
+import svgo from 'vite-plugin-svgo'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -53,6 +54,9 @@ const mapUrlToFsPath = (url) => {
   if (url.startsWith('/components/')) {
     return resolve(__dirname, 'src', url.slice(1))
   }
+  if (url.startsWith('/assets/')) {
+    return resolve(__dirname, 'src', url.slice(1))
+  }
   return null
 }
 
@@ -93,8 +97,11 @@ const resolveOutDir = (value = '') => {
 const transformDataInclude = (base) => ({
   name: 'transform-data-include',
   transformIndexHtml(html) {
-    // Transform data-include và data-js attributes
-    return html.replace(
+    // Transform data-include, data-js, and img src attributes
+    let transformed = html
+    
+    // Transform data-include and data-js
+    transformed = transformed.replace(
       /(data-include|data-js)=["']([^"']+)["']/g,
       (match, attr, path) => {
         // Chỉ transform relative paths
@@ -102,7 +109,6 @@ const transformDataInclude = (base) => ({
           return match
         }
         // Resolve relative path: ../components/footer.html -> components/footer.html
-        // (vì HTML ở src/pages/, nên ../ đi lên src/, rồi vào components/)
         let resolved = path
         if (path.startsWith('../')) {
           resolved = path.replace(/^\.\.\//, '')
@@ -114,6 +120,17 @@ const transformDataInclude = (base) => ({
         return `${attr}="${finalPath}"`
       }
     )
+    
+    // Transform img src="/assets/..." to include base path
+    transformed = transformed.replace(
+      /<img\s+([^>]*?)src=["']\/assets\/([^"']+)["']([^>]*?)>/g,
+      (match, before, assetPath, after) => {
+        const finalPath = base === '/' ? `/assets/${assetPath}` : `${base}assets/${assetPath}`
+        return `<img ${before}src="${finalPath}"${after}>`
+      }
+    )
+    
+    return transformed
   }
 })
 
@@ -155,7 +172,30 @@ export default defineConfig(({ mode }) => {
   return {
     base,
     root: 'src/pages',
-    plugins: [mapSrcRequests(), transformDataInclude(base), copyComponentsPlugin(outDir)],
+    plugins: [
+      mapSrcRequests(), 
+      transformDataInclude(base), 
+      copyComponentsPlugin(outDir),
+      svgo({
+        svgoConfig: {
+          plugins: [
+            {
+              name: 'preset-default',
+              params: {
+                overrides: {
+                  removeViewBox: false,
+                  cleanupIds: false,
+                  removeComments: true,
+                  removeTitle: false,
+                  removeDesc: false,
+                },
+              },
+            },
+            'removeXMLNS',
+          ],
+        },
+      }),
+    ],
 
     server: {
       open: true,
@@ -192,10 +232,10 @@ export default defineConfig(({ mode }) => {
               return `assets/css/${cssName}-[hash][extname]`
             }
             if (ext === 'svg') {
-              return 'assets/svg/[name]-[hash][extname]'
+              return 'assets/svg/[name][extname]'
             }
             if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif'].includes(ext)) {
-              return 'assets/image/[name]-[hash][extname]'
+              return 'assets/image/[name][extname]'
             }
             return 'assets/[name]-[hash][extname]'
           },

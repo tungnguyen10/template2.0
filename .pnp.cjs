@@ -32,8 +32,11 @@ const RAW_RUNTIME_STATE =
           ["glob", "npm:11.1.0"],\
           ["lab-iuh", "workspace:."],\
           ["postcss", "npm:8.5.6"],\
+          ["svgo", "npm:3.3.2"],\
+          ["swiper", "npm:11.2.10"],\
           ["tailwindcss", "npm:3.4.19"],\
-          ["vite", "virtual:1026fa34a26137c733f6f18dbc20b9c40e2887b5c495f70af1f68638cfd41543537a11f96b774d8412e4236444d453697de5f31ac767ce912679883be1e2c5bd#npm:7.3.1"]\
+          ["vite", "virtual:1026fa34a26137c733f6f18dbc20b9c40e2887b5c495f70af1f68638cfd41543537a11f96b774d8412e4236444d453697de5f31ac767ce912679883be1e2c5bd#npm:7.3.1"],\
+          ["vite-plugin-svgo", "virtual:1026fa34a26137c733f6f18dbc20b9c40e2887b5c495f70af1f68638cfd41543537a11f96b774d8412e4236444d453697de5f31ac767ce912679883be1e2c5bd#npm:2.0.0"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -654,6 +657,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@trysound/sax", [\
+      ["npm:0.2.0", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/@trysound-sax-npm-0.2.0-9f763d0295-10c0.zip/node_modules/@trysound/sax/",\
+        "packageDependencies": [\
+          ["@trysound/sax", "npm:0.2.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@types/estree", [\
       ["npm:1.0.8", {\
         "packageLocation": "../../AppData/Local/Yarn/Berry/cache/@types-estree-npm-1.0.8-2195bac6d6-10c0.zip/node_modules/@types/estree/",\
@@ -788,6 +800,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["boolbase", [\
+      ["npm:1.0.0", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/boolbase-npm-1.0.0-965fe9af6d-10c0.zip/node_modules/boolbase/",\
+        "packageDependencies": [\
+          ["boolbase", "npm:1.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["braces", [\
       ["npm:3.0.3", {\
         "packageLocation": "../../AppData/Local/Yarn/Berry/cache/braces-npm-3.0.3-582c14023c-10c0.zip/node_modules/braces/",\
@@ -902,6 +923,13 @@ const RAW_RUNTIME_STATE =
           ["commander", "npm:4.1.1"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:7.2.0", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/commander-npm-7.2.0-19178180f8-10c0.zip/node_modules/commander/",\
+        "packageDependencies": [\
+          ["commander", "npm:7.2.0"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["cross-spawn", [\
@@ -916,11 +944,64 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["css-select", [\
+      ["npm:5.2.2", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/css-select-npm-5.2.2-6385fe3687-10c0.zip/node_modules/css-select/",\
+        "packageDependencies": [\
+          ["boolbase", "npm:1.0.0"],\
+          ["css-select", "npm:5.2.2"],\
+          ["css-what", "npm:6.2.2"],\
+          ["domhandler", "npm:5.0.3"],\
+          ["domutils", "npm:3.2.2"],\
+          ["nth-check", "npm:2.1.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["css-tree", [\
+      ["npm:2.2.1", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/css-tree-npm-2.2.1-ee98ac48a8-10c0.zip/node_modules/css-tree/",\
+        "packageDependencies": [\
+          ["css-tree", "npm:2.2.1"],\
+          ["mdn-data", "npm:2.0.28"],\
+          ["source-map-js", "npm:1.2.1"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:2.3.1", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/css-tree-npm-2.3.1-6540d78e26-10c0.zip/node_modules/css-tree/",\
+        "packageDependencies": [\
+          ["css-tree", "npm:2.3.1"],\
+          ["mdn-data", "npm:2.0.30"],\
+          ["source-map-js", "npm:1.2.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["css-what", [\
+      ["npm:6.2.2", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/css-what-npm-6.2.2-c497de3935-10c0.zip/node_modules/css-what/",\
+        "packageDependencies": [\
+          ["css-what", "npm:6.2.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["cssesc", [\
       ["npm:3.0.0", {\
         "packageLocation": "../../AppData/Local/Yarn/Berry/cache/cssesc-npm-3.0.0-15ec56f86f-10c0.zip/node_modules/cssesc/",\
         "packageDependencies": [\
           ["cssesc", "npm:3.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["csso", [\
+      ["npm:5.0.5", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/csso-npm-5.0.5-b21e2a8b65-10c0.zip/node_modules/csso/",\
+        "packageDependencies": [\
+          ["css-tree", "npm:2.2.1"],\
+          ["csso", "npm:5.0.5"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -966,6 +1047,49 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["dom-serializer", [\
+      ["npm:2.0.0", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/dom-serializer-npm-2.0.0-378ebc7200-10c0.zip/node_modules/dom-serializer/",\
+        "packageDependencies": [\
+          ["dom-serializer", "npm:2.0.0"],\
+          ["domelementtype", "npm:2.3.0"],\
+          ["domhandler", "npm:5.0.3"],\
+          ["entities", "npm:4.5.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["domelementtype", [\
+      ["npm:2.3.0", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/domelementtype-npm-2.3.0-02de7cbfba-10c0.zip/node_modules/domelementtype/",\
+        "packageDependencies": [\
+          ["domelementtype", "npm:2.3.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["domhandler", [\
+      ["npm:5.0.3", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/domhandler-npm-5.0.3-3ede73dc10-10c0.zip/node_modules/domhandler/",\
+        "packageDependencies": [\
+          ["domelementtype", "npm:2.3.0"],\
+          ["domhandler", "npm:5.0.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["domutils", [\
+      ["npm:3.2.2", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/domutils-npm-3.2.2-290180a284-10c0.zip/node_modules/domutils/",\
+        "packageDependencies": [\
+          ["dom-serializer", "npm:2.0.0"],\
+          ["domelementtype", "npm:2.3.0"],\
+          ["domhandler", "npm:5.0.3"],\
+          ["domutils", "npm:3.2.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["eastasianwidth", [\
       ["npm:0.2.0", {\
         "packageLocation": "../../AppData/Local/Yarn/Berry/cache/eastasianwidth-npm-0.2.0-c37eb16bd1-10c0.zip/node_modules/eastasianwidth/",\
@@ -1006,6 +1130,15 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["encoding", "npm:0.1.13"],\
           ["iconv-lite", "npm:0.6.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["entities", [\
+      ["npm:4.5.0", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/entities-npm-4.5.0-7cdb83b832-10c0.zip/node_modules/entities/",\
+        "packageDependencies": [\
+          ["entities", "npm:4.5.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -1407,8 +1540,11 @@ const RAW_RUNTIME_STATE =
           ["glob", "npm:11.1.0"],\
           ["lab-iuh", "workspace:."],\
           ["postcss", "npm:8.5.6"],\
+          ["svgo", "npm:3.3.2"],\
+          ["swiper", "npm:11.2.10"],\
           ["tailwindcss", "npm:3.4.19"],\
-          ["vite", "virtual:1026fa34a26137c733f6f18dbc20b9c40e2887b5c495f70af1f68638cfd41543537a11f96b774d8412e4236444d453697de5f31ac767ce912679883be1e2c5bd#npm:7.3.1"]\
+          ["vite", "virtual:1026fa34a26137c733f6f18dbc20b9c40e2887b5c495f70af1f68638cfd41543537a11f96b774d8412e4236444d453697de5f31ac767ce912679883be1e2c5bd#npm:7.3.1"],\
+          ["vite-plugin-svgo", "virtual:1026fa34a26137c733f6f18dbc20b9c40e2887b5c495f70af1f68638cfd41543537a11f96b774d8412e4236444d453697de5f31ac767ce912679883be1e2c5bd#npm:2.0.0"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -1456,6 +1592,22 @@ const RAW_RUNTIME_STATE =
           ["proc-log", "npm:6.1.0"],\
           ["promise-retry", "npm:2.0.1"],\
           ["ssri", "npm:13.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["mdn-data", [\
+      ["npm:2.0.28", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/mdn-data-npm-2.0.28-9e644d5992-10c0.zip/node_modules/mdn-data/",\
+        "packageDependencies": [\
+          ["mdn-data", "npm:2.0.28"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:2.0.30", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/mdn-data-npm-2.0.30-bf7b39c09a-10c0.zip/node_modules/mdn-data/",\
+        "packageDependencies": [\
+          ["mdn-data", "npm:2.0.30"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -1652,6 +1804,16 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../AppData/Local/Yarn/Berry/cache/normalize-path-npm-3.0.0-658ba7d77f-10c0.zip/node_modules/normalize-path/",\
         "packageDependencies": [\
           ["normalize-path", "npm:3.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["nth-check", [\
+      ["npm:2.1.1", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/nth-check-npm-2.1.1-f97afc8169-10c0.zip/node_modules/nth-check/",\
+        "packageDependencies": [\
+          ["boolbase", "npm:1.0.0"],\
+          ["nth-check", "npm:2.1.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -2189,6 +2351,31 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["svgo", [\
+      ["npm:3.3.2", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/svgo-npm-3.3.2-69e1d32944-10c0.zip/node_modules/svgo/",\
+        "packageDependencies": [\
+          ["@trysound/sax", "npm:0.2.0"],\
+          ["commander", "npm:7.2.0"],\
+          ["css-select", "npm:5.2.2"],\
+          ["css-tree", "npm:2.3.1"],\
+          ["css-what", "npm:6.2.2"],\
+          ["csso", "npm:5.0.5"],\
+          ["picocolors", "npm:1.1.1"],\
+          ["svgo", "npm:3.3.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["swiper", [\
+      ["npm:11.2.10", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/swiper-npm-11.2.10-2bf88a66cf-10c0.zip/node_modules/swiper/",\
+        "packageDependencies": [\
+          ["swiper", "npm:11.2.10"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["tailwindcss", [\
       ["npm:3.4.19", {\
         "packageLocation": "../../AppData/Local/Yarn/Berry/cache/tailwindcss-npm-3.4.19-413012276f-10c0.zip/node_modules/tailwindcss/",\
@@ -2400,6 +2587,33 @@ const RAW_RUNTIME_STATE =
           "terser",\
           "tsx",\
           "yaml"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["vite-plugin-svgo", [\
+      ["npm:2.0.0", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/vite-plugin-svgo-npm-2.0.0-60d6c18302-10c0.zip/node_modules/vite-plugin-svgo/",\
+        "packageDependencies": [\
+          ["vite-plugin-svgo", "npm:2.0.0"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:1026fa34a26137c733f6f18dbc20b9c40e2887b5c495f70af1f68638cfd41543537a11f96b774d8412e4236444d453697de5f31ac767ce912679883be1e2c5bd#npm:2.0.0", {\
+        "packageLocation": "./.yarn/__virtual__/vite-plugin-svgo-virtual-2d08aac450/3/AppData/Local/Yarn/Berry/cache/vite-plugin-svgo-npm-2.0.0-60d6c18302-10c0.zip/node_modules/vite-plugin-svgo/",\
+        "packageDependencies": [\
+          ["@types/typescript", null],\
+          ["@types/vite", null],\
+          ["svgo", "npm:3.3.2"],\
+          ["typescript", null],\
+          ["vite", "virtual:1026fa34a26137c733f6f18dbc20b9c40e2887b5c495f70af1f68638cfd41543537a11f96b774d8412e4236444d453697de5f31ac767ce912679883be1e2c5bd#npm:7.3.1"],\
+          ["vite-plugin-svgo", "virtual:1026fa34a26137c733f6f18dbc20b9c40e2887b5c495f70af1f68638cfd41543537a11f96b774d8412e4236444d453697de5f31ac767ce912679883be1e2c5bd#npm:2.0.0"]\
+        ],\
+        "packagePeers": [\
+          "@types/typescript",\
+          "@types/vite",\
+          "typescript",\
+          "vite"\
         ],\
         "linkType": "HARD"\
       }]\
