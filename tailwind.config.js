@@ -10,7 +10,26 @@ export default {
     "../js/**/*.js",
   ],
   theme: {
-    extend: {},
+    extend: {
+       colors: {
+        'primary': {
+          white: '#FFFFFF',
+          yellow: '#F9B200',
+          'dark-blue': '#153898',
+        },
+        'secondary': {
+          green: '#75C7A3',
+          yellow: '#FFE293',
+          'yellow-light': '#FEF9E3',
+          blue: '#8ED8F8',
+          'blue-light': '#E3F6FDFF',
+        },
+        'danger': {
+          DEFAULT: '#DD2F2C',
+          light: '#FFEBEEFF',
+        },
+      },
+    },
   },
   plugins: [],
 }

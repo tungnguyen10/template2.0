@@ -3,9 +3,9 @@
  * Import Tailwind CSS và khởi tạo components
  */
 
-import './styles/main.css'
-import './components/header/header.css'
-import './components/footer/footer.css'
+import './styles/main.scss'
+import './components/header/header.scss'
+import './components/footer/footer.scss'
 import { appEnv } from './config/env.js'
 import { inlineSVGs } from './js/svg-loader.js'
 import { loadingManager } from './js/loading.js'
