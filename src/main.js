@@ -7,6 +7,13 @@ import './styles/main.css'
 import './components/header/header.css'
 import './components/footer/footer.css'
 import { loadComponents } from './js/main.js'
+import { appEnv } from './config/env.js'
+
+// Surface the current environment for debugging/styling hooks
+document.documentElement.dataset.appEnv = appEnv
+if (import.meta.env.DEV) {
+  console.info(`[lab-iuh] Running in ${appEnv} mode`)
+}
 
 // Load components khi DOM ready
 document.addEventListener('DOMContentLoaded', async () => {
