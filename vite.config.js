@@ -2,7 +2,7 @@ import { defineConfig, loadEnv } from 'vite'
 import { resolve, extname, basename, dirname, isAbsolute } from 'path'
 import { glob } from 'glob'
 import { fileURLToPath } from 'url'
-import { copyFileSync, mkdirSync, existsSync } from 'fs'
+import { copyFileSync, mkdirSync, existsSync, readFileSync } from 'fs'
 import svgo from 'vite-plugin-svgo'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -97,27 +97,39 @@ const resolveOutDir = (value = '') => {
 const transformDataInclude = (base) => ({
   name: 'transform-data-include',
   transformIndexHtml(html) {
-    // Transform data-include, data-js, and img src attributes
     let transformed = html
     
-    // Transform data-include and data-js
+    // Inject HTML components directly into DOM during build
+    // Component JS đã được bundle vào main.js nên không cần inject script tag nữa
     transformed = transformed.replace(
-      /(data-include|data-js)=["']([^"']+)["']/g,
-      (match, attr, path) => {
-        // Chỉ transform relative paths
-        if (path.startsWith('/') || path.startsWith('http')) {
-          return match
+      /<div\s+data-include=["']([^"']+)["'](?:\s+data-js=["'][^"']+["'])?\s*><\/div>/g,
+      (match, htmlPath) => {
+        try {
+          // Xử lý relative path từ pages
+          let componentPath = htmlPath
+          if (htmlPath.startsWith('../')) {
+            // ../components/header/header.html -> components/header/header.html
+            componentPath = htmlPath.replace(/^\.\.\//, '')
+          } else if (htmlPath.startsWith('./')) {
+            // ./header.html -> pages/header.html
+            componentPath = `pages/${htmlPath.slice(2)}`
+          } else if (base !== '/' && htmlPath.startsWith(base)) {
+            // Remove base path
+            componentPath = htmlPath.substring(base.length)
+          } else if (htmlPath.startsWith('/')) {
+            componentPath = htmlPath.substring(1)
+          }
+          
+          // Đọc file component HTML từ src
+          const fullComponentPath = resolve(__dirname, 'src', componentPath)
+          const componentHtml = readFileSync(fullComponentPath, 'utf-8').trim()
+          
+          // Chỉ trả về HTML, không cần script tag vì JS đã bundle trong main.js
+          return componentHtml
+        } catch (error) {
+          console.warn(`Failed to inject component: ${htmlPath}`, error.message)
+          return match // Giữ nguyên nếu có lỗi
         }
-        // Resolve relative path: ../components/footer.html -> components/footer.html
-        let resolved = path
-        if (path.startsWith('../')) {
-          resolved = path.replace(/^\.\.\//, '')
-        } else if (path.startsWith('./')) {
-          resolved = `pages/${path.slice(2)}`
-        }
-        // Prepend base path
-        const finalPath = base === '/' ? `/${resolved}` : `${base}${resolved}`
-        return `${attr}="${finalPath}"`
       }
     )
     
@@ -134,35 +146,8 @@ const transformDataInclude = (base) => ({
   }
 })
 
-const copyComponentsPlugin = (outDirPath) => ({
-  name: 'copy-components',
-  closeBundle() {
-    // Copy all component HTML/JS files to dist (CSS already bundled in main)
-    const componentsDir = resolve(__dirname, 'src/components')
-    const targetDir = resolve(outDirPath, 'components')
-    
-    // Get only .html and .js files (CSS is already imported in main.js and bundled)
-    const componentFiles = glob.sync('**/*.{html,js}', {
-      cwd: componentsDir
-    })
-    
-    componentFiles.forEach(file => {
-      const srcPath = resolve(componentsDir, file)
-      const destPath = resolve(targetDir, file)
-      const destDir = dirname(destPath)
-      
-      // Create directory if not exists
-      if (!existsSync(destDir)) {
-        mkdirSync(destDir, { recursive: true })
-      }
-      
-      // Copy file
-      copyFileSync(srcPath, destPath)
-    })
-    
-    console.log(`✓ Copied ${componentFiles.length} component files to ${targetDir}`)
-  }
-})
+// Component JS đã được bundle vào main.js qua import.meta.glob
+// Không cần copy components nữa
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, __dirname, '')
@@ -174,8 +159,7 @@ export default defineConfig(({ mode }) => {
     root: 'src/pages',
     plugins: [
       mapSrcRequests(), 
-      transformDataInclude(base), 
-      copyComponentsPlugin(outDir),
+      transformDataInclude(base),
       svgo({
         svgoConfig: {
           plugins: [
