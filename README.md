@@ -1,148 +1,269 @@
 # Lab IUH - Static Website
 
-Static website được build với Vite + Vanilla JS + TailwindCSS
+Modern static website built with Vite + Vanilla JS + TailwindCSS, featuring build-time optimization and component bundling.
 
-## 📁 Cấu trúc dự án
+## 📁 Project Structure
 
 ```
 src/
-├─ pages/            # Các HTML pages
+├─ pages/              # HTML pages (content-only)
 │  ├─ index.html
-│  └─ about.html
-├─ components/       # Components (HTML + JS + CSS)
+│  ├─ about.html
+│  └─ contact.html
+├─ layouts/            # Layout templates
+│  └─ default.html     # Default layout with SEO
+├─ components/         # Components (HTML + JS + CSS)
 │  ├─ header/
 │  │  ├─ header.html
 │  │  ├─ header.js
 │  │  └─ header.css
-│  └─ footer/
-│     ├─ footer.html
-│     └─ footer.css
+│  ├─ footer/
+│  │  ├─ footer.html
+│  │  └─ footer.css
+│  └─ loading/
+│     └─ loading.html  # Global loading overlay
 ├─ js/
-│  ├─ main.js           # Entry point
-│  ├─ componentLoader.js # Component loader
-│  ├─ home.js           # Home page JS
-│  └─ about.js          # About page JS
+│  ├─ loading.js       # LoadingManager (global loading API)
+│  ├─ svg-loader.js    # Auto SVG inlining
+│  ├─ utils.js         # Utility functions (delay, etc)
+│  ├─ home.js          # Home page specific JS
+│  └─ about.js         # About page specific JS
 ├─ styles/
-│  └─ main.css          # Tailwind entry
-└─ assets/
-   └─ images/
+│  └─ main.css         # Tailwind entry + custom components
+├─ assets/
+│  ├─ images/
+│  └─ svg/             # SVG icons (auto-loaded)
+├─ config/
+│  └─ env.js           # Environment config
+└─ main.js             # Vite entry point
+
+vite.config.js         # Vite config with custom plugins
+dist_iuh/              # Build output folder
 ```
 
-## 🚀 Cách sử dụng
+## 🚀 Quick Start
 
-### 1. Cài đặt dependencies
+### 1. Install Dependencies
 
 ```bash
 npm install
-# hoặc
+# or
 yarn install
 ```
 
-### 2. Development
+### 2. Development Mode
 
 ```bash
 npm run dev
-# hoặc
+# or
 yarn dev
 ```
 
-Mở http://localhost:5173
+Opens http://localhost:5173
 
-### 3. Build production
+### 3. Build for Production
 
 ```bash
 npm run build
-# hoặc
+# or
 yarn build
 ```
 
-Output: `dist/` folder
+Output: `dist_iuh/` folder (configured via VITE_OUT_DIR)
 
-### 4. Preview production build
+### 4. Preview Production Build
 
 ```bash
 npm run preview
-# hoặc
+# or
 yarn preview
 ```
 
-## 🎯 Cách hoạt động
+## 🎯 Architecture Overview
 
-### Component System
+### Build-Time Component Injection
 
-Components được load tự động qua attribute `data-include`:
+Components are **injected at build time** (not runtime) using custom Vite plugin:
 
 ```html
+<!-- In page HTML -->
 <div data-include="../../components/header/header.html"></div>
 ```
 
-Component có thể có JS riêng (export `init` function):
+During build, the plugin reads `header.html` and injects its content directly, eliminating HTTP requests.
+
+### Layout Template System
+
+Pages use a **content-only format** with metadata markers:
+
+```html
+<!-- src/pages/index.html -->
+<!-- LAYOUT: title="Home - Lab IUH" -->
+<!-- LAYOUT: description="Welcome to Lab IUH" -->
+<!-- LAYOUT: keywords="vite, tailwind, lab" -->
+<!-- LAYOUT: script="../js/home.js" -->
+
+<section class="hero">
+  <!-- Your content -->
+</section>
+```
+
+The `layoutPlugin` wraps this content with `src/layouts/default.html`, which includes:
+- Full SEO meta tags (OG, Twitter Card, keywords)
+- Header/Footer structure
+- Global loading overlay
+- Page-specific script injection
+
+### Auto Component Bundling
+
+All component JavaScript is **automatically bundled** into main.js:
 
 ```javascript
-// header.js
+// src/main.js
+const componentModules = import.meta.glob('./components/**/*.js', { eager: true })
+
+// Auto-init all components
+Object.values(componentModules).forEach(module => {
+  if (module.init && typeof module.init === 'function') {
+    module.init()
+  }
+})
+```
+
+No need to manually import each component - just export an `init()` function:
+
+```javascript
+// src/components/header/header.js
 export function init() {
-  // Component logic
+  // Component initialization logic
 }
 ```
 
-### Page-specific JS
+### Auto SVG Loading
 
-Mỗi page có thể có JS riêng, chỉ chạy trên page đó:
+SVGs are **auto-imported and inlined** for better styling:
 
-```html
-<!-- index.html -->
-<script type="module" src="../js/home.js"></script>
+```javascript
+// src/main.js
+const svgModules = import.meta.glob('./assets/svg/*.svg', { eager: true, query: '?url' })
+await inlineSVGs() // Inlines all SVGs with data-svg attribute
 ```
 
-JS lắng nghe event `components-loaded` để đảm bảo components đã load xong:
+Usage in HTML:
+```html
+<img data-svg="logo" alt="Logo">
+<!-- Becomes inline SVG at runtime for CSS styling -->
+```
+
+### Global Loading System
+
+**LoadingManager** provides a global loading API with counter pattern:
+
+```javascript
+import { loadingManager } from './js/loading.js'
+
+// Manual control
+loadingManager.show('Loading data...')
+await fetchData()
+loadingManager.hide()
+
+// Or wrap async functions
+const fetchData = loadingManager.wrap(
+  async () => {
+    const res = await fetch('/api/data')
+    return res.json()
+  },
+  'Loading data...'
+)
+
+// Force hide (reset counter)
+loadingManager.forceHide()
+```
+
+The counter pattern tracks multiple concurrent operations - loading only hides when all operations complete.
+
+### Page Lifecycle
 
 ```javascript
 document.addEventListener('components-loaded', () => {
-  // Your page logic
+  // Your page-specific logic
+  // All components initialized, SVGs loaded
 })
 ```
+
+## 🔧 Custom Vite Plugins
+
+### layoutPlugin
+
+- **Order**: `pre` (runs before other transforms)
+- **Purpose**: Wraps page content with layout template
+- **Features**:
+  - Extracts metadata from `<!-- LAYOUT: key="value" -->` comments
+  - Injects loading component
+  - Replaces placeholders: `{{title}}`, `{{content}}`, `{{pageScript}}`, etc.
+
+### transformDataInclude
+
+- **Purpose**: Build-time component HTML injection
+- **Features**:
+  - Finds `<div data-include="path">` tags
+  - Reads component HTML files
+  - Replaces tags with actual HTML content
+  - No runtime overhead
 
 ## 📦 Tech Stack
 
-- **Vite** - Build tool & dev server
-- **Vanilla JavaScript** - No frameworks
-- **TailwindCSS** - Utility-first CSS
+- **Vite 7.3.1** - Lightning-fast build tool & dev server
+- **Vanilla JavaScript** - No frameworks, pure web standards
+- **TailwindCSS** - Utility-first CSS framework
 - **PostCSS** - CSS processing
+- **Swiper** - Touch slider for carousels
 
-## 🎨 Thêm page mới
+## ✨ Key Features
 
-1. Tạo file HTML trong `src/pages/`:
+✅ **Build-time component injection** - Zero runtime overhead  
+✅ **Layout template system** - DRY HTML structure  
+✅ **Auto component bundling** - import.meta.glob  
+✅ **Auto SVG inlining** - Better CSS styling  
+✅ **Global loading system** - Counter pattern for async ops  
+✅ **SEO optimized** - OG tags, Twitter Card, meta tags  
+✅ **Content-only pages** - Metadata marker pattern  
+✅ **Fast HMR** - Instant updates in dev mode  
+✅ **Production-ready** - Optimized static output  
+✅ **No complex frameworks** - Simple, maintainable code  
+
+## 🎨 Adding New Pages
+
+1. Create content-only HTML in `src/pages/`:
+
 ```html
-<!-- src/pages/contact.html -->
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Contact</title>
-  <script type="module" src="../js/main.js"></script>
-</head>
-<body>
-  <div data-include="../../components/header/header.html"></div>
+<!-- src/pages/services.html -->
+<!-- LAYOUT: title="Services - Lab IUH" -->
+<!-- LAYOUT: description="Our services" -->
+<!-- LAYOUT: keywords="services, web, design" -->
+<!-- LAYOUT: script="../js/services.js" -->
+
+<section class="container mx-auto py-12">
+  <h1>Our Services</h1>
   <!-- Your content -->
-  <div data-include="../../components/footer/footer.html"></div>
-  <script type="module" src="../js/contact.js"></script>
-</body>
-</html>
+</section>
 ```
 
-2. Tạo JS cho page (optional):
+2. Create page-specific JS (optional):
+
 ```javascript
-// src/js/contact.js
+// src/js/services.js
 document.addEventListener('components-loaded', () => {
-  // Page logic
+  // Page initialization
 })
 ```
 
-Vite sẽ tự động build file mới!
+Vite auto-detects and builds the new page!
 
-## 🔧 Thêm component mới
+## 🔧 Adding New Components
 
-1. Tạo folder trong `src/components/`:
+1. Create component folder in `src/components/`:
+
 ```
 src/components/card/
 ├─ card.html
@@ -150,21 +271,48 @@ src/components/card/
 └─ card.css (optional)
 ```
 
-2. Sử dụng trong page:
+2. Use in pages:
+
 ```html
 <div data-include="../../components/card/card.html"></div>
 ```
 
-## ✨ Features
+3. Add JS if needed:
 
-✅ HTML-first architecture  
-✅ Component-based structure  
-✅ Dynamic component loading  
-✅ Page-specific JavaScript  
-✅ TailwindCSS styling  
-✅ Fast HMR with Vite  
-✅ Production-ready static output  
-✅ No complex frameworks  
+```javascript
+// src/components/card/card.js
+export function init() {
+  // Component logic
+}
+```
+
+The component is auto-imported and initialized!
+
+## 🛠️ Utility Functions
+
+```javascript
+import { delay } from './js/utils.js'
+
+// Delay execution
+await delay(1000) // Wait 1 second
+```
+
+## 🌍 Environment Configuration
+
+```javascript
+// src/config/env.js
+export const appEnv = import.meta.env.MODE // 'development' | 'production'
+export const basePath = import.meta.env.VITE_BASE_PATH // '/iuh/test/'
+```
+
+Usage in code:
+```javascript
+import { appEnv, basePath } from './config/env.js'
+
+if (appEnv === 'development') {
+  console.log('Dev mode')
+}
+```
 
 ## 📝 License
 
