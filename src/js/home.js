@@ -8,17 +8,8 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
-import { inlineSVGs } from './svg-loader.js'
 
-// Import SVG assets to ensure they're bundled (using ?url forces asset emission)
-import rocketSvg from '../assets/svg/rocket.svg?url'
-import clockSvg from '../assets/svg/clock.svg?url'
-import viteSvg from '../assets/svg/vite.svg?url'
-
-document.addEventListener('components-loaded', async () => {
-  // Inline SVGs for hover effects
-  await inlineSVGs()
-  
+document.addEventListener('components-loaded', () => {
   const btn = document.getElementById('demo-btn')
   const output = document.getElementById('demo-output')
   

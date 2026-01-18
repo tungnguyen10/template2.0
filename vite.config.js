@@ -107,9 +107,12 @@ const layoutPlugin = () => ({
   name: 'layout-plugin',
   transformIndexHtml: {
     order: 'pre', // Chạy TRƯỚC để wrap layout trước khi inject components
-    handler(html) {
+    handler(html, { path }) {
       // Extract metadata từ HTML comments
       const titleMatch = html.match(/<!--\s*LAYOUT:\s*title="([^"]+)"\s*-->/)
+      const descMatch = html.match(/<!--\s*LAYOUT:\s*description="([^"]+)"\s*-->/)
+      const keywordsMatch = html.match(/<!--\s*LAYOUT:\s*keywords="([^"]+)"\s*-->/)
+      const ogImageMatch = html.match(/<!--\s*LAYOUT:\s*ogImage="([^"]+)"\s*-->/)
       const scriptMatch = html.match(/<!--\s*LAYOUT:\s*script="([^"]+)"\s*-->/)
       
       // Nếu không có marker LAYOUT thì skip (giữ nguyên HTML - full page)
@@ -122,19 +125,28 @@ const layoutPlugin = () => ({
       
       // Extract content: Lấy toàn bộ sau metadata markers
       let content = html
-        .replace(/<!--\s*LAYOUT:\s*title="[^"]+"\s*-->\s*/g, '')
-        .replace(/<!--\s*LAYOUT:\s*script="[^"]+"\s*-->\s*/g, '')
+        .replace(/<!--\s*LAYOUT:[^>]+-->\s*/g, '')
         .trim()
       
-      // Extract values
+      // Extract values với defaults
       const title = titleMatch[1]
+      const description = descMatch?.[1] || 'Static website với Vite + Vanilla JS + TailwindCSS'
+      const keywords = keywordsMatch?.[1] || 'vite, vanilla js, tailwindcss, static site'
+      const ogImage = ogImageMatch?.[1] || '/assets/image/og-default.png'
       const pageScript = scriptMatch?.[1] 
         ? `<!-- Page-specific JS -->\n  <script type="module" src="${scriptMatch[1]}"></script>`
         : ''
       
+      // Tạo URL từ path (sẽ được thay thế bởi base path trong production)
+      const url = path.replace(/\.html$/, '')
+      
       // Inject vào layout
       return layout
-        .replace('{{title}}', title)
+        .replace(/\{\{title\}\}/g, title)
+        .replace(/\{\{description\}\}/g, description)
+        .replace(/\{\{keywords\}\}/g, keywords)
+        .replace(/\{\{ogImage\}\}/g, ogImage)
+        .replace(/\{\{url\}\}/g, url)
         .replace('{{content}}', content)
         .replace('{{pageScript}}', pageScript)
     }
