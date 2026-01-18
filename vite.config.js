@@ -94,6 +94,53 @@ const resolveOutDir = (value = '') => {
   return isAbsolute(finalTarget) ? finalTarget : resolve(__dirname, finalTarget)
 }
 
+// Layout template cache để tránh đọc file nhiều lần
+let layoutCache = null
+const getLayoutTemplate = () => {
+  if (!layoutCache) {
+    layoutCache = readFileSync(resolve(__dirname, 'src/layouts/default.html'), 'utf-8')
+  }
+  return layoutCache
+}
+
+const layoutPlugin = () => ({
+  name: 'layout-plugin',
+  transformIndexHtml: {
+    order: 'pre', // Chạy TRƯỚC để wrap layout trước khi inject components
+    handler(html) {
+      // Extract metadata từ HTML comments
+      const titleMatch = html.match(/<!--\s*LAYOUT:\s*title="([^"]+)"\s*-->/)
+      const scriptMatch = html.match(/<!--\s*LAYOUT:\s*script="([^"]+)"\s*-->/)
+      
+      // Nếu không có marker LAYOUT thì skip (giữ nguyên HTML - full page)
+      if (!titleMatch) {
+        return html
+      }
+      
+      // Load layout template (cached)
+      const layout = getLayoutTemplate()
+      
+      // Extract content: Lấy toàn bộ sau metadata markers
+      let content = html
+        .replace(/<!--\s*LAYOUT:\s*title="[^"]+"\s*-->\s*/g, '')
+        .replace(/<!--\s*LAYOUT:\s*script="[^"]+"\s*-->\s*/g, '')
+        .trim()
+      
+      // Extract values
+      const title = titleMatch[1]
+      const pageScript = scriptMatch?.[1] 
+        ? `<!-- Page-specific JS -->\n  <script type="module" src="${scriptMatch[1]}"></script>`
+        : ''
+      
+      // Inject vào layout
+      return layout
+        .replace('{{title}}', title)
+        .replace('{{content}}', content)
+        .replace('{{pageScript}}', pageScript)
+    }
+  }
+})
+
 const transformDataInclude = (base) => ({
   name: 'transform-data-include',
   transformIndexHtml(html) {
@@ -158,8 +205,9 @@ export default defineConfig(({ mode }) => {
     base,
     root: 'src/pages',
     plugins: [
-      mapSrcRequests(), 
-      transformDataInclude(base),
+      mapSrcRequests(),
+      layoutPlugin(), // Chạy TRƯỚC để wrap layout
+      transformDataInclude(base), // Chạy SAU để inject components vào layout
       svgo({
         svgoConfig: {
           plugins: [
@@ -216,10 +264,10 @@ export default defineConfig(({ mode }) => {
               return `assets/css/${cssName}-[hash][extname]`
             }
             if (ext === 'svg') {
-              return 'assets/svg/[name][extname]'
+              return 'assets/svgs/[name][extname]'
             }
             if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif'].includes(ext)) {
-              return 'assets/image/[name][extname]'
+              return 'assets/images/[name][extname]'
             }
             return 'assets/[name]-[hash][extname]'
           },

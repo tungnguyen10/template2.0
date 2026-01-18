@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}} - Lab IUH</title>
+  <script type="module" src="../main.js"></script>
+</head>
+<body class="flex flex-col min-h-screen bg-gray-50">
+  
+  <!-- Header Component -->
+  <div data-include="../components/header/header.html" data-js="../components/header/header.js"></div>
+  
+  <!-- Main Content -->
+  <main class="flex-1">
+    {{content}}
+  </main>
+  
+  <!-- Footer Component -->
+  <div data-include="../components/footer/footer.html"></div>
+  
+  {{pageScript}}
+</body>
+</html>
