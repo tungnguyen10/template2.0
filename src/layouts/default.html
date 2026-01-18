@@ -32,7 +32,10 @@
   
   <script type="module" src="../main.js"></script>
 </head>
-<body class="flex flex-col min-h-screen bg-gray-50">
+<body class="flex flex-col min-h-screen bg-gray-50 loading-active">
+  
+  <!-- Global Loading Overlay - Render FIRST -->
+  {{loadingComponent}}
   
   <!-- Header Component -->
   <div data-include="../components/header/header.html" data-js="../components/header/header.js"></div>

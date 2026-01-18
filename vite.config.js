@@ -123,6 +123,9 @@ const layoutPlugin = () => ({
       // Load layout template (cached)
       const layout = getLayoutTemplate()
       
+      // Load loading component (inline CSS critical)
+      const loadingComponent = readFileSync(resolve(__dirname, 'src/components/loading/loading.html'), 'utf-8')
+      
       // Extract content: Lấy toàn bộ sau metadata markers
       let content = html
         .replace(/<!--\s*LAYOUT:[^>]+-->\s*/g, '')
@@ -147,6 +150,7 @@ const layoutPlugin = () => ({
         .replace(/\{\{keywords\}\}/g, keywords)
         .replace(/\{\{ogImage\}\}/g, ogImage)
         .replace(/\{\{url\}\}/g, url)
+        .replace('{{loadingComponent}}', loadingComponent)
         .replace('{{content}}', content)
         .replace('{{pageScript}}', pageScript)
     }

@@ -1,0 +1,23 @@
+<!-- Global Loading Overlay - Modern Minimal Design -->
+<div id="global-loading" class="loading-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white/95 backdrop-blur-sm transition-all duration-500">
+  <!-- Logo or Brand Icon (Optional) -->
+  <div class="mb-8 relative">
+    <div class="w-20 h-20 relative">
+      <!-- Rotating rings -->
+      <div class="absolute inset-0 rounded-full border-[3px] border-gray-200"></div>
+      <div class="absolute inset-0 rounded-full border-[3px] border-transparent border-t-blue-600 animate-spin"></div>
+      <div class="absolute inset-2 rounded-full border-[3px] border-transparent border-t-indigo-500 animate-spin" style="animation-duration: 1.5s; animation-direction: reverse;"></div>
+      
+      <!-- Center icon -->
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg shadow-lg animate-pulse"></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Loading Text -->
+  <div class="loading-text text-base font-medium text-gray-800 mb-3">
+    Loading...
+  </div>
+  
+</div>
